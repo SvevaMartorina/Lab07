@@ -11,6 +11,7 @@ class Artefatto:
     tipologia: str
     epoca: str
     id_museo: str
+    nome_museo: str
 
     def __eq__(self, other):
         return isinstance(other, Artefatto) and self.id == other.id

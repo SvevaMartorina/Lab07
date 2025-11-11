@@ -23,9 +23,10 @@ class View:
 
         # Controller
         self.controller = None
-        self.lista_artefatti = None
 
-        #creo un contenitore verticale nel flet per ospitare la lista di artefatti
+        # creo un contenitore verticale nel flet per ospitare la lista di artefatti
+        #momentaneamente lo nascondo, così da farlo comparire solo quando premo mostra artefatti
+        self.lista_artefatti = ft.Column()
 
 
     def show_alert(self, messaggio):
@@ -40,14 +41,14 @@ class View:
     #implemento funzioni per aggiornare il dropdown con i dati del model
     def mostra_musei_dropdown(self, lista_musei):
         #riempie il menù dei musei
-        self.menu_musei.options = [ft.dropdown.Option(text=m.nome, key=m.id) for m in lista_musei]
-        self.menu_musei.value = ""
+        self.menu_musei.options = [ft.dropdown.Option(text=m, key=m) for m in lista_musei]
+        self.menu_musei.value = None
         self.page.update()
 
     def mostra_epoche_dropdown(self, lista_epoche):
         #riempie il menù delle epoche
         self.menu_epoca.options = [ft.dropdown.Option(text=e, key=e) for e in lista_epoche]
-        self.menu_epoca.value = ""
+        self.menu_epoca.value = None
         self.page.update()
 
     def get_filtro_museo(self):
@@ -76,7 +77,6 @@ class View:
 
         # Sezione 3: Artefatti
         self.btn_artefatti = ft.ElevatedButton(text="Mostra Artefatti", on_click= self._click_mostra_artefatti )
-        self.lista_artefatti = ft.Column()
         # TODO
 
         # --- Toggle Tema ---
@@ -102,6 +102,7 @@ class View:
         )
 
         self.page.scroll = "adaptive"
+        #self.page.add(self.lista_artefatti)
         self.page.update()
 
     def cambia_tema(self, e):
@@ -113,7 +114,7 @@ class View:
     def _filtri_changed(self, e):
         """Quando cambia un filtro, avvisa il controller."""
         if self.controller:
-            self.controller.on_filtri_cambiati()
+            self.controller.aggiorna_risultati()
 
     def _click_mostra_artefatti(self, e):
         """Quando clicchi il bottone, avvisa il controller."""
@@ -121,14 +122,13 @@ class View:
             self.controller.aggiorna_risultati()
 
     def mostra_artefatti(self, artefatti):
-        # svuota prima
+         #svuota prima
         self.lista_artefatti.controls.clear()
         if not artefatti:
             self.lista_artefatti.controls.append(ft.Text("Nessun artefatto trovato."))
         else:
             for a in artefatti:
-                # a = (id, nome, epoca, id_museo, nome_museo)
+                 #a è un oggetto artefatto con attributi (id, nome, epoca, id_museo)
                 self.lista_artefatti.controls.append(ft.Text(f"{a.nome} • {a.epoca} • {a.nome_museo}"))
+        self.lista_artefatti.update()
 
-
-        self.page.update()

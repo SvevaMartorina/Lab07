@@ -35,6 +35,6 @@ class Model:
     # --- MUSEI ---
     def get_musei(self):
         """ Restituisce la lista di tutti i nomi dei musei."""
-        return self._museo_dao.get_museo()
+        return [museo.nome for museo in self._museo_dao.get_museo()]
         # TODO
 

@@ -48,6 +48,4 @@ class Controller:
         artefatti = self._model.get_artefatti_filtrati(self.museo_selezionato, self.epoca_selezionata)
         self._view.mostra_artefatti(artefatti)
 
-    def on_filtri_cambiati(self):
-        self.aggiorna_risultati()
     # TODO

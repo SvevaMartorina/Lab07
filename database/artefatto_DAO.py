@@ -22,13 +22,16 @@ class ArtefattoDAO:
             raise RuntimeError("Connessione al DB non disponibile")
         else:
             cursor = cnx.cursor()
-            query = "SELECT * FROM artefatto"
+            query = ("SELECT A.id, A.nome,A.tipologia, A.epoca, A.id_museo "
+                     "FROM artefatto A "
+                     "JOIN museo M ON A.id_museo = M.id" )
             cursor.execute(query)
             result = []
             for row in cursor:
-                uTemp = Artefatto(row[0], row[1], row[2], row[3], row[4])
-                result.append(uTemp)
-            #cursor.close()
+                artefatto = Artefatto(id = row[0], nome = row[1], tipologia = row[2],
+                                      epoca = row[3], id_museo = row[4])
+                result.append(artefatto)
+            cursor.close()
             cnx.close()
             return result
 
@@ -39,7 +42,7 @@ class ArtefattoDAO:
             raise RuntimeError("Connessione al DB non disponibile")
         else:
             cursor = cnx.cursor()
-            query = ("SELECT A.id, A.nome, A.epoca, M.id AS id_museo, M.nome AS nome_museo "
+            query = ("SELECT A.id, A.nome, A.tipologia, A.epoca, M.id, M.nome "
                      "FROM artefatto A "
                      "JOIN museo M ON A.id_museo = M.id "
                      "WHERE 1=1")
@@ -55,11 +58,14 @@ class ArtefattoDAO:
                 filtri.append(epoca.strip())
 
             cursor.execute(query, filtri)
+            rows = cursor.fetchall()
             artefatti = []
-            for row in cursor.fetchall():
-                artefatto = Artefatto(row[0], row[1], row[2], row[3], row[4])
+            for row in rows:
+                artefatto = Artefatto(id = row[0], nome = row[1], tipologia = row[2],
+                                      epoca = row[3], id_museo = row[4], nome_museo = row[5])
                 artefatti.append(artefatto)
             cursor.close()
+            cnx.close()
             return artefatti
 
 #restituisce una lista contenente tutte le epoche
@@ -73,10 +79,11 @@ class ArtefattoDAO:
                      'FROM artefatto')
             cursor.execute(query)
             epoche = []
-            for row in cursor.fetchall():
+            for row in cursor:
                 epoca = row[0]
                 epoche.append(epoca)
             cursor.close()
+            cnx.close()
             return epoche
 
     # TODO
