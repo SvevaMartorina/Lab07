@@ -41,23 +41,27 @@ class View:
     #implemento funzioni per aggiornare il dropdown con i dati del model
     def mostra_musei_dropdown(self, lista_musei):
         #riempie il menù dei musei
-        self.menu_musei.options = [ft.dropdown.Option(text=m, key=m) for m in lista_musei]
-        self.menu_musei.value = None
+        self.menu_musei.options = ([ft.dropdown.Option(text="Nessun filtro", key="")] +
+                                   [ft.dropdown.Option(text=m, key=m) for m in lista_musei])
+        self.menu_musei.value = ""
         self.page.update()
 
     def mostra_epoche_dropdown(self, lista_epoche):
         #riempie il menù delle epoche
-        self.menu_epoca.options = [ft.dropdown.Option(text=e, key=e) for e in lista_epoche]
-        self.menu_epoca.value = None
+        self.menu_epoca.options = ([ft.dropdown.Option(text="Nessun filtro", key="")] +
+                                   [ft.dropdown.Option(text=e, key=e) for e in lista_epoche])
+        self.menu_epoca.value = ""
         self.page.update()
 
     def get_filtro_museo(self):
         #Restituisce il museo selezionato
-        return self.menu_musei.value or ""
+        valore = self.menu_musei.value
+        return valore if valore!= "" else None
 
     def get_filtro_epoca(self):
         #Restituisce l’epoca selezionata
-        return self.menu_epoca.value or ""
+        valore = self.menu_epoca.value
+        return valore if valore!= "" else None
 
 
     def load_interface(self):

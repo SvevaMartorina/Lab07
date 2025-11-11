@@ -27,5 +27,6 @@ class MuseoDAO:
                 museo = Museo(row[0], row[1], row[2])
                 musei.append(museo)
             cursor.close()
+            cnx.close()
         return musei
     # TODO
